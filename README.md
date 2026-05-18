@@ -1,2 +1,65 @@
 # BDML-PS03-Grupo3
 Big Data and Machine Learning – Universidad de los Andes – Problem Set 3: Spatial and Machine Learning Models for Housing Price Prediction in Bogotá
+
+En este repositorio encontrará la solución del Problem set 3 correspondiente al mejor modelo para predecir los precios de la vivienda en Chapinero, Bogotá.
+
+## Autores
+
+-   Leidy Lorena Dávila Vallejo - COD: 202522776
+-   Juan Guillermo Sánchez - COD: 202323123
+-   Héctor Steben Barrios Carranza - COD: 202116184
+
+## Descarga de datos
+
+Los datos no están incluidos en este repositorio por restricciones de tamaño. Es necesario:
+
+1. Descargar las bases de datos de kaggle (https://www.kaggle.com/competitions/uniandes-bdml-2026-10-ps-2/data)
+2. Correr la siguiente línea para crear la carpeta `02_data/`:
+
+`for (path in c("02_data")) {dir.create(path, recursive = TRUE, showWarnings = FALSE)}`
+
+2. Guardar los siguientes archivos dentro de la carpeta `02_data/`:
+
+- train.csv
+- test.csv
+
+## Replicación
+
+Para reproducir todos los resultados, una vez descargados y ubicados los datos, correr:
+
+`source("01_code/00_rundirectory.R")`
+
+## Estructura de código
+
+-   `01_code/00_rundirectory.R`: Master script. Reproduce todos los códigos y resultados.
+-   `01_code/01_setup_packages.R`: Carga e instala los paquetes necesarios.
+-   `01_code/02_load_and_preprare_data.R`: Llama, transforma y realiza la limpieza necesaria a los datos.
+-   `01_code/03_model_1_LPM_v1.R`: Estimación del modelo lineal
+-   `01_code/04_model_2_LPM_v2.R`: Estimación del modelo lineal mejorado
+-   `01_code/05_model_3_Logit_v1.R`: Estimación del modelo logit
+-   `01_code/06_model_4_Logit_v2.R`: Estimación del modelo logit mejorado
+-   `01_code/07_model_5_EN_v1.R`: Estimación del modelo elastic net
+-   `01_code/08_model_6_EN_v2.R`: Estimación del modelo elastic net mejorado
+-   `01_code/09_model_7_RF_v1.R`: Estimación del modelo random forest
+-   `01_code/10_model_8_NB_v1.R`: Estimación del modelo naive bayes
+-   `01_code/11_model_9_CART_v1.R`: Estimación del modelo de árbol o CART
+-   `01_code/12_model_10_EN_v3.R`: Estimación del modelo elastic net con ROSE
+-   `01_code/13_model_11_EN_v4.R`: Estimación del modelo elastic net con UPSUMPLING
+-   `01_code/14_model_12_EN_v5.R`: Estimación del modelo elastic net con DOWNSAMPLIN
+-   `01_code/15_model_13_EN_v6.R`: Estimación del modelo elastic net Tuning de Alpha y Lambda
+-   `01_code/16_model_14_Logit_v3.R`: Estimación del modelo logit alterno
+-   `01_code/17_model_15_RF_v2.R`: Estimación del modelo random forest alterno
+-   `01_code/18_statistics_of_models.R`: Crea tablas y gráficas sobre los resultados y cálculos de los modelos.
+
+## Salidas
+
+Todos los outputs se generan automáticamente en `02_outputs/`.
+
+-   Figures (`03_outputs/figures/`): visualizaciones generadas por el código
+-   Submissions (`03_outputs/submissions/`): archivos con los resultados de los modelos para subir a Kaggle
+-   Tables (`03_outputs/tables/`): resultados de estimaciones en formato `.tex` y `.html`
+
+## Software / entorno
+
+-   R version 4.5.1
+-   Required packages: Pacman
