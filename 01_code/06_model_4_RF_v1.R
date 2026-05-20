@@ -1,7 +1,7 @@
 # Seleccionamos las variables finales
 train_model <- train_final |>
   select(
-    log_price, bedrooms, property_type,
+    log_price, bedrooms, property_type, 
     dist_parque_m, dist_bus_stop, dist_commerce, dist_school, n_rest_250m,
     dist_gym, dist_bank, dist_health, dist_police, tiene_ascensor, tiene_gimnasio, 
     tiene_bbq, tiene_parqueadero, tiene_balcon, tiene_deposito

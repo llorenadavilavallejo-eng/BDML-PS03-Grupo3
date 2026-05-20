@@ -59,3 +59,15 @@ submission_gbm <- data.frame(
   price       = exp(pred_gbm)
 )
 
+file_gbm <- paste0(
+  "Model_GBM_trees_", gbm_reg$bestTune$n.trees,
+  "_depth_", gbm_reg$bestTune$interaction.depth,
+  "_shrink_", gbm_reg$bestTune$shrinkage,
+  ".csv"
+)
+
+write.csv(
+  submission_gbm,
+  here("03_output","submissions", file_gbm),
+  row.names = FALSE
+)
