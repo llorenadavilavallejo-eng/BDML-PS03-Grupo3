@@ -668,3 +668,5 @@ test_final <- test_final |>
     property_type = as.factor(property_type),
     across(starts_with("tiene_"), as.numeric)
   )
+
+cat("✅ Base preparada correctamente\n")
