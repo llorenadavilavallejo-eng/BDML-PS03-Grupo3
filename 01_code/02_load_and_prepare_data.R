@@ -77,13 +77,6 @@ if (!file.exists(here("03_output", "openstreetmap", "osm_parks_raw.rds"))) {
   )
   Sys.sleep(10)
   osm_parks_raw <- osmdata_sf(q_parks)
-  # Crear carpeta si no existe
-  dir.create(
-    here("03_output", "openstreetmap"),
-    recursive = TRUE,
-    showWarnings = FALSE
-  )
-  # Guardar archivo
   saveRDS(
     osm_parks_raw,
     here("03_output", "openstreetmap", "osm_parks_raw.rds")
@@ -148,7 +141,8 @@ full_db <- mutate(
   dist_parque_m = as.numeric(dist_park)
 )
 # BUS STOPS
-if (!file.exists("osm_bus_raw.rds")) {
+if (!file.exists(here("03_output","openstreetmap","osm_bus_raw.rds"
+))) {
   q_bus <- opq(
     bbox = bbox_bogota,
     timeout = 120
@@ -160,9 +154,13 @@ if (!file.exists("osm_bus_raw.rds")) {
   )
   Sys.sleep(10)
   osm_bus_raw <- osmdata_sf(q_bus)
-  saveRDS(osm_bus_raw, "osm_bus_raw.rds")
+  saveRDS(
+    osm_bus_raw,
+    here("03_output","openstreetmap","osm_bus_raw.rds")
+  )
 } else {
-  osm_bus_raw <- readRDS("osm_bus_raw.rds")
+  osm_bus_raw <- readRDS(here("03_output","openstreetmap","osm_bus_raw.rds")
+  )
 }
 
 bus_points <- osm_bus_raw$osm_points
@@ -203,7 +201,7 @@ full_db <- mutate(
 )
 
 # MALLS Y SUPERMERCADOS
-if (!file.exists("osm_commerce_raw.rds")) {
+if (!file.exists(here("03_output", "openstreetmap", "osm_commerce_raw.rds"))) {
   q_commerce <- opq(
     bbox = bbox_bogota,
     timeout = 120
@@ -220,11 +218,11 @@ if (!file.exists("osm_commerce_raw.rds")) {
   osm_commerce_raw <- osmdata_sf(q_commerce)
   saveRDS(
     osm_commerce_raw,
-    "osm_commerce_raw.rds"
+    here("03_output", "openstreetmap", "osm_commerce_raw.rds")
   )
 } else {
   osm_commerce_raw <- readRDS(
-    "osm_commerce_raw.rds"
+    here("03_output", "openstreetmap", "osm_commerce_raw.rds")
   )
 }
 
@@ -254,11 +252,12 @@ full_db <- mutate(
 )
 
 # COLEGIOS Y UNIVERSIDADES
-if (!file.exists("osm_schools_raw.rds")) {
+if (!file.exists(here("03_output", "openstreetmap", "osm_schools_raw.rds"))) {
   q_schools <- opq(
     bbox = bbox_bogota,
     timeout = 120
   )
+  
   q_schools <- add_osm_feature(
     q_schools,
     key = "amenity",
@@ -267,17 +266,19 @@ if (!file.exists("osm_schools_raw.rds")) {
       "university"
     )
   )
+  
   Sys.sleep(10)
-  osm_schools_raw <- osmdata_sf(
-    q_schools
-  )
+  
+  osm_schools_raw <- osmdata_sf(q_schools)
+
   saveRDS(
     osm_schools_raw,
-    "osm_schools_raw.rds"
+    here("03_output", "openstreetmap", "osm_schools_raw.rds")
   )
+  
 } else {
   osm_schools_raw <- readRDS(
-    "osm_schools_raw.rds"
+    here("03_output", "openstreetmap", "osm_schools_raw.rds")
   )
 }
 
@@ -310,27 +311,30 @@ full_db <- mutate(
 
 # RESTAURANTES
 # Cantidad de restaurantes dentro de 250 metros.
-if (!file.exists("osm_rest_raw.rds")) {
+if (!file.exists(here("03_output", "openstreetmap", "osm_rest_raw.rds"))) {
   q_rest <- opq(
     bbox = bbox_bogota,
     timeout = 120
   )
+  
   q_rest <- add_osm_feature(
     q_rest,
     key = "amenity",
     value = "restaurant"
   )
+  
   Sys.sleep(10)
-  osm_rest_raw <- osmdata_sf(
-    q_rest
-  )
+  
+  osm_rest_raw <- osmdata_sf(q_rest)
+
   saveRDS(
     osm_rest_raw,
-    "osm_rest_raw.rds"
+    here("03_output", "openstreetmap", "osm_rest_raw.rds")
   )
+  
 } else {
   osm_rest_raw <- readRDS(
-    "osm_rest_raw.rds"
+    here("03_output", "openstreetmap", "osm_rest_raw.rds")
   )
 }
 
@@ -366,40 +370,31 @@ full_db <- mutate(
   )
 )
 
-# Histograma restaurantes
-ggplot(
-  full_db,
-  aes(x = n_rest_250m)
-) +
-  geom_histogram(
-    bins = 40,
-    fill = "darkgreen",
-    color = "white"
-  ) +
-  theme_minimal()
-
 # GIMNASIOS
-if (!file.exists("osm_gyms_raw.rds")) {
+if (!file.exists(here("03_output", "openstreetmap", "osm_gyms_raw.rds"))) {
   q_gyms <- opq(
     bbox = bbox_bogota,
     timeout = 120
   )
+  
   q_gyms <- add_osm_feature(
     q_gyms,
     key = "leisure",
     value = "fitness_centre"
   )
+  
   Sys.sleep(10)
-  osm_gyms_raw <- osmdata_sf(
-    q_gyms
-  )
+  
+  osm_gyms_raw <- osmdata_sf(q_gyms)
+
   saveRDS(
     osm_gyms_raw,
-    "osm_gyms_raw.rds"
+    here("03_output", "openstreetmap", "osm_gyms_raw.rds")
   )
+  
 } else {
   osm_gyms_raw <- readRDS(
-    "osm_gyms_raw.rds"
+    here("03_output", "openstreetmap", "osm_gyms_raw.rds")
   )
 }
 
@@ -431,11 +426,12 @@ full_db <- mutate(
 )
 
 # BANCOS Y ATM
-if (!file.exists("osm_bank_raw.rds")) {
+if (!file.exists(here("03_output", "openstreetmap", "osm_bank_raw.rds"))) {
   q_bank <- opq(
     bbox = bbox_bogota,
     timeout = 120
   )
+  
   q_bank <- add_osm_feature(
     q_bank,
     key = "amenity",
@@ -444,17 +440,19 @@ if (!file.exists("osm_bank_raw.rds")) {
       "bank"
     )
   )
+  
   Sys.sleep(10)
-  osm_bank_raw <- osmdata_sf(
-    q_bank
-  )
+  
+  osm_bank_raw <- osmdata_sf(q_bank)
+
   saveRDS(
     osm_bank_raw,
-    "osm_bank_raw.rds"
+    here("03_output", "openstreetmap", "osm_bank_raw.rds")
   )
+  
 } else {
   osm_bank_raw <- readRDS(
-    "osm_bank_raw.rds"
+    here("03_output", "openstreetmap", "osm_bank_raw.rds")
   )
 }
 
@@ -488,11 +486,12 @@ full_db <- mutate(
 )
 
 # HOSPITALES Y CLÍNICAS
-if (!file.exists("osm_health_raw.rds")) {
+if (!file.exists(here("03_output", "openstreetmap", "osm_health_raw.rds"))) {
   q_health <- opq(
     bbox = bbox_bogota,
     timeout = 120
   )
+  
   q_health <- add_osm_feature(
     q_health,
     key = "amenity",
@@ -501,17 +500,19 @@ if (!file.exists("osm_health_raw.rds")) {
       "hospital"
     )
   )
+  
   Sys.sleep(10)
-  osm_health_raw <- osmdata_sf(
-    q_health
-  )
+  
+  osm_health_raw <- osmdata_sf(q_health)
+  
   saveRDS(
     osm_health_raw,
-    "osm_health_raw.rds"
+    here("03_output", "openstreetmap", "osm_health_raw.rds")
   )
+  
 } else {
   osm_health_raw <- readRDS(
-    "osm_health_raw.rds"
+    here("03_output", "openstreetmap", "osm_health_raw.rds")
   )
 }
 
@@ -545,27 +546,30 @@ full_db <- mutate(
 )
 
 # POLICÍA
-if (!file.exists("osm_police_raw.rds")) {
+if (!file.exists(here("03_output", "openstreetmap", "osm_police_raw.rds"))) {
   q_police <- opq(
     bbox = bbox_bogota,
     timeout = 120
   )
+  
   q_police <- add_osm_feature(
     q_police,
     key = "amenity",
     value = "police"
   )
+  
   Sys.sleep(10)
-  osm_police_raw <- osmdata_sf(
-    q_police
-  )
+  
+  osm_police_raw <- osmdata_sf(q_police)
+
   saveRDS(
     osm_police_raw,
-    "osm_police_raw.rds"
+    here("03_output", "openstreetmap", "osm_police_raw.rds")
   )
+  
 } else {
   osm_police_raw <- readRDS(
-    "osm_police_raw.rds"
+    here("03_output", "openstreetmap", "osm_police_raw.rds")
   )
 }
 
@@ -664,36 +668,3 @@ test_final <- test_final |>
     property_type = as.factor(property_type),
     across(starts_with("tiene_"), as.numeric)
   )
-
-# Seleccionamos las variables finales
-train_model <- train_final |>
-  select(
-    log_price, bedrooms, property_type,
-    dist_parque_m, dist_bus_stop, dist_commerce, dist_school, n_rest_250m,
-    dist_gym, dist_bank, dist_health, dist_police, tiene_ascensor, tiene_gimnasio, 
-    tiene_bbq, tiene_parqueadero, tiene_balcon, tiene_deposito
-  )
-
-test_model <- test_final |>
-  select(
-    property_id, bedrooms, property_type,
-    dist_parque_m, dist_bus_stop, dist_commerce, dist_school, n_rest_250m,
-    dist_gym, dist_bank, dist_health, dist_police, tiene_ascensor, tiene_gimnasio, 
-    tiene_bbq, tiene_parqueadero, tiene_balcon, tiene_deposito
-  )
-
-x_vars <- setdiff(names(train_model), c("log_price","price"))
-num_vars <- x_vars[sapply(train_model[, x_vars], is.numeric)]
-fac_vars <- x_vars[sapply(train_model[, x_vars], is.factor)]
-
-colSums(is.na(train_model))
-colSums(is.na(test_model))
-
-set.seed(2026)
-
-ctrl_reg <- trainControl(
-  method          = "cv",
-  number          = 5,
-  verboseIter     = FALSE,
-  savePredictions = "final"
-)

@@ -283,7 +283,7 @@ webshot2::webshot(
 )
 
 ####################################
-# GRÁFICAS
+# GRÁFICAS COMPLEMENTARIAS
 ####################################
 # Histograma distancia al parque
 graf_dist_parque <- ggplot(
@@ -393,3 +393,52 @@ ggsave(
   bg = "white"
 )
 
+
+# Histograma restaurantes
+graf_restaurantes <- ggplot(
+  full_db,
+  aes(x = n_rest_250m)
+) +
+  geom_histogram(
+    bins = 40,
+    fill = "#1B7837",
+    color = "white",
+    linewidth = 0.2
+  ) +
+  scale_x_continuous(labels = scales::comma) +
+  labs(
+    title = "Número de restaurantes en 250 metros",
+    x = "Cantidad de restaurantes",
+    y = "Número de inmuebles"
+  ) +
+  theme_minimal(base_size = 16) +
+  theme(
+    plot.title = element_text(
+      face = "bold",
+      size = 22,
+      hjust = 0.5
+    ),
+    axis.title = element_text(
+      face = "bold",
+      size = 16
+    ),
+    axis.text = element_text(
+      size = 13
+    ),
+    panel.grid.minor = element_blank(),
+    panel.grid.major.x = element_blank(),
+    plot.margin = margin(20, 20, 20, 20)
+  )
+
+ggsave(
+  filename = here(
+    "03_output",
+    "figures",
+    "hist_restaurantes_250m.png"
+  ),
+  plot = graf_restaurantes,
+  width = 10,
+  height = 7,
+  dpi = 400,
+  bg = "white"
+)
