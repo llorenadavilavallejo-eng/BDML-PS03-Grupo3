@@ -22,7 +22,7 @@ for (path in c("02_data")) {
   dir.create(path, recursive = TRUE, showWarnings = FALSE)
 }
 
-for (path in c("03_output", "03_output/figures", "03_output/tables", "03_output/submissions")) {
+for (path in c("03_output", "03_output/figures", "03_output/tables", "03_output/submissions", "03_output/openstreetmap")) {
   dir.create(path, recursive = TRUE, showWarnings = FALSE)
 }
 

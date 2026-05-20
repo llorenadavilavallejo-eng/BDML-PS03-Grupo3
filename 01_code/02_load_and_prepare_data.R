@@ -6,9 +6,8 @@
 set.seed(2026)
 
 # Importamos las bases
-setwd("C:/Users/HECTOR BARRIOS/Documents/Taller 3/Bases")
-train<-read.csv("train.csv")
-test<-read.csv("test.csv")
+train<-read.csv(here("02_data","train.csv"))
+test<-read.csv(here("02_data","test.csv"))
 
 # Revisamos estructura de los datos
 glimpse(train)
@@ -28,27 +27,6 @@ train <- train |> mutate(dataset = "train")
 test  <- test  |> mutate(dataset = "test", price = NA_real_)
 full_db <- bind_rows(train, test)
 
-# Tabla descriptiva inicial
-train %>%
-  select(price, surface_total,surface_covered,rooms,bedrooms,bathrooms) %>%
-  tbl_summary(
-    statistic = list(
-      all_continuous() ~ "{mean} ({min}, {max})"
-    ),
-    digits = all_continuous() ~ 0,
-    label = list(
-      price            = "Precio",
-      surface_total    = "Área total",
-      surface_covered  = "Área construida",
-      rooms            = "Número de habitaciones",
-      bedrooms         = "Número de alcobas",
-      bathrooms        = "Número de baños"
-    ),
-    missing_text = "(Faltante)"
-  ) %>%
-  modify_header(label ~ "**Variable**") %>%
-  bold_labels()
-
 # Creamos logaritmo del precio
 full_db <- full_db |>
   mutate(
@@ -66,88 +44,14 @@ full_db |>
     nas_lon = sum(is.na(lon)))
 
 ####################################
-# GRÁFICAS INICIALES
-####################################
-#  Distribución del precio
-ggplot(
-  full_db %>% filter(dataset == "train"),
-  aes(x = price)
-) +
-  geom_histogram(
-    bins = 60,
-    fill = "steelblue",
-    color = "white"
-  ) +
-  scale_x_continuous(labels = scales::comma) +
-  theme_minimal() +
-  labs(
-    title = "Distribución del precio",
-    x = "Precio",
-    y = "Frecuencia"
-  )
-
-# Distribución log-precio
-ggplot(
-  full_db %>% filter(dataset == "train"),
-  aes(x = log_price)
-) +
-  geom_histogram(
-    bins = 50,
-    fill = "darkblue",
-    color = "white"
-  ) +
-  theme_minimal() +
-  labs(
-    title = "Distribución log-precio",
-    x = "Log precio",
-    y = "Frecuencia"
-  )
-
-####################################
 # MAPA
 ####################################
 # Convertimos base a objeto espacial
 full_sf <- st_as_sf(full_db,coords = c("lon", "lat"),crs = 4326)
 
-# Visualización simple
-ggplot() +
-  geom_sf(
-    data = full_sf,
-    color = "steelblue",
-    alpha = 0.5,
-    size = 0.3
-  ) +
-  theme_minimal() +
-  labs(
-    title = "Ubicación de inmuebles"
-  )
-
 # Centro del mapa
 latitud_central  <- mean(full_db$lat)
 longitud_central <- mean(full_db$lon)
-
-# Mapa e inmuebles
-leaflet() %>%
-  addTiles() %>%
-  setView(
-    lng = longitud_central,
-    lat = latitud_central,
-    zoom = 11
-  ) %>%
-  addCircleMarkers(
-    lng = full_db$lon,
-    lat = full_db$lat,
-    radius = 2,
-    color = "steelblue",
-    stroke = FALSE,
-    fillOpacity = 0.5,
-    popup = paste0(
-      "<b>Precio:</b> ",
-      scales::comma(full_db$price),
-      "<br><b>Tipo:</b> ",
-      full_db$property_type
-    )
-  )
 
 ####################################
 # VARIABLES OPENSTREETMAP
@@ -161,7 +65,7 @@ full_sf_m <- st_transform(full_sf, 3116)
 
 # PARQUES
 # Descargamos desde OSM
-if (!file.exists("osm_parks_raw.rds")) {
+if (!file.exists(here("03_output", "openstreetmap", "osm_parks_raw.rds"))) {
   q_parks <- opq(
     bbox = bbox_bogota,
     timeout = 120
@@ -173,9 +77,21 @@ if (!file.exists("osm_parks_raw.rds")) {
   )
   Sys.sleep(10)
   osm_parks_raw <- osmdata_sf(q_parks)
-  saveRDS(osm_parks_raw, "osm_parks_raw.rds")
+  # Crear carpeta si no existe
+  dir.create(
+    here("03_output", "openstreetmap"),
+    recursive = TRUE,
+    showWarnings = FALSE
+  )
+  # Guardar archivo
+  saveRDS(
+    osm_parks_raw,
+    here("03_output", "openstreetmap", "osm_parks_raw.rds")
+  )
 } else {
-  osm_parks_raw <- readRDS("osm_parks_raw.rds")
+  osm_parks_raw <- readRDS(
+    here("03_output", "openstreetmap", "osm_parks_raw.rds")
+  )
 }
 
 # Extraemos polígonos
@@ -231,46 +147,6 @@ full_db <- mutate(
   full_db,
   dist_parque_m = as.numeric(dist_park)
 )
-
-# Gráfica distancia al parque más cercano
-ggplot(
-  full_db,
-  aes(x = dist_parque_m)
-) +
-  geom_histogram(
-    bins = 60,
-    fill = "darkgreen",
-    color = "white"
-  ) +
-  theme_minimal() +
-  labs(
-    title = "Distancia al parque más cercano",
-    x = "Distancia (metros)",
-    y = "Frecuencia"
-  )
-
-# Gráfica distancia al parque más cercano vs precio
-ggplot(
-  full_db %>%
-    filter(dataset == "train") %>%
-    sample_n(4000),
-  aes(
-    x = dist_parque_m,
-    y = price
-  )
-) +
-  geom_point(
-    alpha = 0.3,
-    color = "steelblue"
-  ) +
-  scale_y_continuous(labels = scales::comma) +
-  theme_minimal() +
-  labs(
-    title = "Distancia al parque vs precio",
-    x = "Distancia al parque (m)",
-    y = "Precio"
-  )
-
 # BUS STOPS
 if (!file.exists("osm_bus_raw.rds")) {
   q_bus <- opq(
