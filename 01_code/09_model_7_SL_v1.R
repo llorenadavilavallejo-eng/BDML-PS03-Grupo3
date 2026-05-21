@@ -45,13 +45,15 @@ sl_model <- caretEnsemble(
 
 summary(sl_model)
 
-pred_sl <- predict(sl_model, newdata = test_final)
+pred_sl <- predict(sl_model, newdata = test_model)
 
 submission_sl <- data.frame(
-  property_id = test_final$property_id,
-  price       = exp(pred_sl)
+  property_id = test_model$property_id,
+  price = exp(pred_sl$pred)
 )
 
-write.csv(submission_sl,
-          "Model10_SuperLearner_EN_RF_GBM.csv",
-          row.names = FALSE)
+write.csv(
+  submission_sl,
+  here("03_output","submissions","Model_SuperLearner_EN_RF_GBM.csv"),
+  row.names = FALSE
+)
