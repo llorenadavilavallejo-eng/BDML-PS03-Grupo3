@@ -1,146 +1,288 @@
-# Mejora variable área
-# Extraer áreas
-patron_area <- "(\\d+[\\.,]?\\d*)\\s?(m2|mt2|mts2|mts|m²|metros|metro)"
+####################################
+# MODELO 1 MEJORADO: LM 
+####################################
 
-full_base <- full_base |>
+#Se realiza un modelo mejorado de regresion lineal,
+#con el fin de aumentar la capacidad predictiva y reducir el error MAE en las predicciones de precios inmobiliarios. 
+# se incorporó variables estructurales, espaciales y de texto, además de transformaciones logarítmicas e interacciones entre variables.
+#adicional se realizo un tratamiento de valores extremos y una corrección de retransfomación para obtener predicciones más estables y precisas.
+
+
+train_model_lm <- train_final |>
   mutate(
-    area_texto = str_extract(text_all, patron_area),
-    area_texto = str_extract(area_texto, "\\d+[\\.,]?\\d*"),
-    area_texto = str_replace(area_texto, ",", "."),
-    area_texto = as.numeric(area_texto)
+    property_type = as.factor(property_type),
+    
+    # Transformaciones
+    log_surface_total   = log1p(surface_total),
+    log_surface_covered = log1p(surface_covered),
+    
+    log_dist_parque   = log1p(dist_parque_m),
+    log_dist_bus      = log1p(dist_bus_stop),
+    log_dist_commerce = log1p(dist_commerce),
+    log_dist_school   = log1p(dist_school),
+    log_dist_gym      = log1p(dist_gym),
+    log_dist_bank     = log1p(dist_bank),
+    log_dist_health   = log1p(dist_health),
+    log_dist_police   = log1p(dist_police),
+    
+    log_rest_250m = log1p(n_rest_250m),
+    
+    # Ratio construido / total
+    ratio_covered_total = surface_covered / surface_total,
+    
+    ratio_covered_total = if_else(
+      is.finite(ratio_covered_total),
+      ratio_covered_total,
+      NA_real_
+    )
+  ) |>
+  
+  select(
+    log_price,
+    property_type,
+    rooms,
+    bedrooms,
+    bathrooms,
+    
+    log_surface_total,
+    log_surface_covered,
+    ratio_covered_total,
+    
+    log_dist_parque,
+    log_dist_bus,
+    log_dist_commerce,
+    log_dist_school,
+    log_dist_gym,
+    log_dist_bank,
+    log_dist_health,
+    log_dist_police,
+    
+    log_rest_250m,
+    
+    tiene_ascensor,
+    tiene_gimnasio,
+    tiene_bbq,
+    tiene_parqueadero,
+    tiene_balcon,
+    tiene_deposito
   )
 
-# Completar faltantes
-full_base <- full_base |>
+# #########################
+# BASE TEST
+# #########################
+
+test_model_lm <- test_final |>
   mutate(
-    surface_covered = if_else(
-      is.na(surface_covered),
-      area_texto,
-      surface_covered
+    property_type = as.factor(property_type),
+    
+    log_surface_total   = log1p(surface_total),
+    log_surface_covered = log1p(surface_covered),
+    
+    log_dist_parque   = log1p(dist_parque_m),
+    log_dist_bus      = log1p(dist_bus_stop),
+    log_dist_commerce = log1p(dist_commerce),
+    log_dist_school   = log1p(dist_school),
+    log_dist_gym      = log1p(dist_gym),
+    log_dist_bank     = log1p(dist_bank),
+    log_dist_health   = log1p(dist_health),
+    log_dist_police   = log1p(dist_police),
+    
+    log_rest_250m = log1p(n_rest_250m),
+    
+    ratio_covered_total = surface_covered / surface_total,
+    
+    ratio_covered_total = if_else(
+      is.finite(ratio_covered_total),
+      ratio_covered_total,
+      NA_real_
+    )
+  ) |>
+  
+  select(
+    property_id,
+    property_type,
+    rooms,
+    bedrooms,
+    bathrooms,
+    
+    log_surface_total,
+    log_surface_covered,
+    ratio_covered_total,
+    
+    log_dist_parque,
+    log_dist_bus,
+    log_dist_commerce,
+    log_dist_school,
+    log_dist_gym,
+    log_dist_bank,
+    log_dist_health,
+    log_dist_police,
+    
+    log_rest_250m,
+    
+    tiene_ascensor,
+    tiene_gimnasio,
+    tiene_bbq,
+    tiene_parqueadero,
+    tiene_balcon,
+    tiene_deposito
+  )
+
+# #########################
+# IMPUTACIÓN DE MISSINGS
+# #########################
+
+train_model_lm <- train_model_lm |>
+  mutate(
+    across(
+      where(is.numeric),
+      ~ ifelse(is.na(.),
+               median(., na.rm = TRUE),
+               .)
     )
   )
 
-# Volver a separar train y test 
-train_final <- full_base |> filter(dataset == "train") |> select(-dataset)
-test_final  <- full_base |> filter(dataset == "test")  |> select(-dataset, -price, -log_price)
-
-# Convertimos variables a formatos correctos
-train_final <- train_final |>
+test_model_lm <- test_model_lm |>
   mutate(
-    property_type = as.factor(property_type),
-    across(starts_with("tiene_"), as.numeric)
+    across(
+      where(is.numeric),
+      ~ ifelse(is.na(.),
+               median(., na.rm = TRUE),
+               .)
+    )
   )
 
-test_final <- test_final |>
-  mutate(
-    property_type = as.factor(property_type),
-    across(starts_with("tiene_"), as.numeric)
-  )
+# #########################
+# ELIMINAR OUTLIERS
+# #########################
 
-train_model <- train_final |>
-  select(
-    log_price,surface_covered,bedrooms,bathrooms, property_type,lat,lon,
-    dist_parque_m,dist_bus_stop,dist_commerce,dist_school,n_rest_250m,
-    dist_gym,dist_bank,dist_health,dist_police,tiene_ascensor,tiene_gimnasio,
-    tiene_bbq,tiene_parqueadero,tiene_balcon,tiene_deposito
-  )
-
-test_model <- test_final |>
-  select(
-    property_id,surface_covered,bedrooms,bathrooms,property_type,lat,lon,
-    dist_parque_m,dist_bus_stop,dist_commerce,dist_school,n_rest_250m,
-    dist_gym,dist_bank,dist_health,dist_police,tiene_ascensor,tiene_gimnasio,
-    tiene_bbq,tiene_parqueadero,tiene_balcon,tiene_deposito
-  )
-
-x_vars <- setdiff(names(train_model), c("log_price","price"))
-num_vars <- x_vars[sapply(train_model[, x_vars], is.numeric)]
-fac_vars <- x_vars[sapply(train_model[, x_vars], is.factor)]
-
-colSums(is.na(train_model))
-colSums(is.na(test_model))
-
-train_sf <- st_as_sf(
-  train_model,
-  coords = c("lon", "lat"),
-  crs = 4326
+q_low  <- quantile(
+  train_model_lm$log_price,
+  0.01,
+  na.rm = TRUE
 )
+
+q_high <- quantile(
+  train_model_lm$log_price,
+  0.99,
+  na.rm = TRUE
+)
+
+train_model_lm <- train_model_lm |>
+  filter(
+    log_price >= q_low,
+    log_price <= q_high
+  )
+
+# #########################
+# MODELO LM
+# #########################
 
 set.seed(2026)
 
-spatial_folds <- spatial_block_cv(
-  train_sf,
-  v = 5
+lm_mejorado <- train(
+  
+  log_price ~
+    
+    property_type +
+    
+    rooms +
+    bedrooms +
+    bathrooms +
+    
+    log_surface_total +
+    log_surface_covered +
+    
+    ratio_covered_total +
+    
+    log_dist_parque +
+    log_dist_bus +
+    log_dist_commerce +
+    log_dist_school +
+    log_dist_gym +
+    log_dist_bank +
+    log_dist_health +
+    log_dist_police +
+    
+    log_rest_250m +
+    
+    tiene_ascensor +
+    tiene_gimnasio +
+    tiene_bbq +
+    tiene_parqueadero +
+    tiene_balcon +
+    tiene_deposito +
+    
+    log_surface_total:property_type +
+    bathrooms:log_surface_total,
+  
+  data      = train_model_lm,
+  method    = "lm",
+  trControl = ctrl_reg,
+  metric    = "MAE"
 )
 
-index <- lapply(
-  spatial_folds$splits,
-  function(x) as.integer(x$in_id)
+# Resultados
+lm_mejorado
+getTrainPerf(lm_mejorado)
+
+# #########################
+# PREDICCIONES
+# #########################
+
+pred_log_lm <- predict(
+  lm_mejorado,
+  newdata = test_model_lm |>
+    select(-property_id)
 )
 
-indexOut <- lapply(
-  spatial_folds$splits,
-  function(x) as.integer(x$out_id)
+# Recorte de predicciones
+log_low <- quantile(
+  train_model_lm$log_price,
+  0.01,
+  na.rm = TRUE
 )
 
-ctrl_spatial <- trainControl(
-  method = "cv",
-  index = index,
-  indexOut = indexOut,
-  verboseIter = TRUE,
-  savePredictions = "final"
+log_high <- quantile(
+  train_model_lm$log_price,
+  0.99,
+  na.rm = TRUE
 )
 
-grid_xgb <- expand.grid(
-  nrounds = c(300, 500, 800),
-  max_depth = c(4, 6, 8),
-  eta = c(0.03, 0.05, 0.1),
-  gamma = c(0, 1),
-  colsample_bytree = c(0.7, 0.9),
-  min_child_weight = c(1, 5),
-  subsample = c(0.7, 0.9)
+pred_log_lm_c <- pmin(
+  pmax(pred_log_lm, log_low),
+  log_high
 )
 
-set.seed(2026)
+# #########################
+# SMEARING FACTOR#
+###########################
 
-xgb_spatial <- train(
-  log_price ~ .,
-  data = train_model,
-  method = "xgbTree",
-  metric = "MAE",
-  trControl = ctrl_spatial,
-  tuneGrid = grid_xgb,
-  na.action = na.pass,
-  verbosity = 0
+resid_lm <- residuals(
+  lm_mejorado$finalModel
 )
 
-xgb_spatial
-xgb_spatial$bestTune
-
-varImp(xgb_spatial)
-
-pred_xgb <- predict(
-  xgb_spatial,
-  newdata = test_model
+smearing_factor <- mean(
+  exp(resid_lm),
+  na.rm = TRUE
 )
 
-submission_xgb <- data.frame(
-  property_id = test_model$property_id,
-  price = exp(pred_xgb)
+# #########################
+# SUBMISSION
+# #########################
+
+submission_lm_mejorado <- data.frame(
+  property_id = test_model_lm$property_id,
+  price       = exp(pred_log_lm_c) * smearing_factor
 )
 
-file_xgb <- paste0(
-  "Model_XGB_SpatialCV_depth_",
-  xgb_spatial$bestTune$max_depth,
-  "_eta_",
-  gsub("\\.","_",xgb_spatial$bestTune$eta),
-  "_rounds_",
-  xgb_spatial$bestTune$nrounds,
-  ".csv"
-)
+View(submission_lm_mejorado)
 
 write.csv(
-  submission_xgb,
-  here("03_output","submissions",file_xgb),
+  submission_lm_mejorado,
+  "Model1_LM_mejorado.csv",
   row.names = FALSE
 )
+
+#para la ejecucion anterior del codigo se pudo mejorar la estructura del precio.con el fin de reducir el error
+>>>>>>> 16e4be4f5dac76ab4e20c502ef2552bf777597b6
