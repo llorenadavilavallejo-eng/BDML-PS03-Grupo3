@@ -9,19 +9,9 @@ En este repositorio encontrará la solución del Problem set 3 correspondiente a
 -   Juan Guillermo Sánchez - COD: 202323123
 -   Héctor Steben Barrios Carranza - COD: 202116184
 
-## Descarga de datos
+## Comentarios
 
-Los datos no están incluidos en este repositorio por restricciones de tamaño. Es necesario:
-
-1. Descargar las bases de datos de kaggle (https://www.kaggle.com/competitions/uniandes-bdml-2026-10-ps-2/data)
-2. Correr la siguiente línea para crear la carpeta `02_data/`:
-
-`for (path in c("02_data")) {dir.create(path, recursive = TRUE, showWarnings = FALSE)}`
-
-2. Guardar los siguientes archivos dentro de la carpeta `02_data/`:
-
-- train.csv
-- test.csv
+Los datos están incluidos en este repositorio.
 
 ## Replicación
 
@@ -53,11 +43,12 @@ Para reproducir todos los resultados, una vez descargados y ubicados los datos, 
 
 ## Salidas
 
-Todos los outputs se generan automáticamente en `02_outputs/`.
+Todos los outputs se generan en `02_outputs/`.
 
 -   Figures (`03_outputs/figures/`): visualizaciones generadas por el código
 -   Submissions (`03_outputs/submissions/`): archivos con los resultados de los modelos para subir a Kaggle
 -   Tables (`03_outputs/tables/`): resultados de estimaciones en formato `.tex` y `.html`
+-   Openstreetmap (`03_outputs/openstreetmap/`): archivos descargados de openstreetmap para obtener datos de georreferenciación
 
 ## Software / entorno
 

@@ -63,3 +63,5 @@ write.csv(
   here("03_output","submissions", file_cart2),
   row.names = FALSE
 )
+
+cat("✅ Modelo 3\n")

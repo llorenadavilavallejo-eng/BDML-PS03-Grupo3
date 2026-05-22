@@ -94,3 +94,5 @@ write.csv(
   here("03_output","submissions",file_rf_spatial),
   row.names = FALSE
 )
+
+cat("✅ Modelo 8\n")

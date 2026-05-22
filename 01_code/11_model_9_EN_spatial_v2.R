@@ -96,3 +96,5 @@ write.csv(
   here("03_output","submissions",name_EN1),
   row.names = FALSE
 )
+
+cat("✅ Modelo 9\n")

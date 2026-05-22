@@ -280,9 +280,8 @@ View(submission_lm_mejorado)
 
 write.csv(
   submission_lm_mejorado,
-  "Model1_LM_mejorado.csv",
+  here("03_output", "submissions", "Model1_LM_mejorado.csv"),
   row.names = FALSE
 )
 
-#para la ejecucion anterior del codigo se pudo mejorar la estructura del precio.con el fin de reducir el error
->>>>>>> 16e4be4f5dac76ab4e20c502ef2552bf777597b6
+cat("✅ Modelo 11\n")

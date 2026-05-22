@@ -57,3 +57,5 @@ write.csv(
   here("03_output", "submissions", "Model1_LM.csv"),
   row.names = FALSE
 )
+
+cat("✅ Modelo 1\n")

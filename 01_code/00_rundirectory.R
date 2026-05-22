@@ -14,22 +14,14 @@
 # - Héctor Steben Barrios Carranza
 ##########################################################
 
-# Paso 0: Limpieza espacio de trabajo y creación de la carpeta de outputs.
+# Paso 0: Limpieza espacio de trabajo.
 cat("\014")
 rm(list = ls())
-
-for (path in c("02_data")) {
-  dir.create(path, recursive = TRUE, showWarnings = FALSE)
-}
-
-for (path in c("03_output", "03_output/figures", "03_output/tables", "03_output/submissions", "03_output/openstreetmap")) {
-  dir.create(path, recursive = TRUE, showWarnings = FALSE)
-}
 
 # Paso 1: Carga e instala los paquetes necesarios.
 source("01_code/01_setup_packages.R")
 
-# Paso 2: Llama, transforma y realiza la limpieza necesaria a los datos.
+# Paso 2: Llama, transforma y realiza la limpieza necesaria de la base de datos
 source("01_code/02_load_and_prepare_data.R")
 
 # Paso 3: Estimación del modelo lineal.
