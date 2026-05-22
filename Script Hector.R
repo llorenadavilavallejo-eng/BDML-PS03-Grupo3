@@ -909,3 +909,30 @@ name_EN1 <- paste0("Model2_EN1_lambda_", lambda_str1,
                    "_alpha_", alpha_str1, ".csv")
 
 write.csv(submission_EN1, name_EN1, row.names = FALSE)
+
+full_db <- full_db |>
+  mutate(
+    title_lower = str_to_lower(title),
+    desc_lower = str_to_lower(description),
+    text_all = paste(title_lower, desc_lower, sep = " ")
+  )
+
+patron_area <- "(\\d+[\\.,]?\\d*)\\s?(m2|mt2|mts2|mts|m²|metros|metro)"
+
+full_db <- full_db |>
+  mutate(
+    area_texto = str_extract(text_all, patron_area),
+    area_texto = str_extract(area_texto, "\\d+[\\.,]?\\d*"),
+    area_texto = str_replace(area_texto, ",", "."),
+    area_texto = as.numeric(area_texto)
+  )
+
+# Completar faltantes
+full_db <- full_db |>
+  mutate(
+    surface_covered = if_else(
+      is.na(surface_covered),
+      area_texto,
+      surface_covered
+    )
+  )
