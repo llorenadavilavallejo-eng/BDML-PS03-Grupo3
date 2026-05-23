@@ -637,8 +637,9 @@ tabla_desc_gbm_gt <- tabla_desc_gbm |>
 #
 
 gtsave(
-  tabla_desc_gbm_gt,
-  "Tabla_Estadisticas_Descriptivas_GBM_SpatialCV.png"
+  data = tabla_desc_gbm_gt,
+  filename = "Tabla_Estadisticas_Descriptivas_GBM_SpatialCV.png",
+  path = "03_output/tables"
 )
 
 #######
