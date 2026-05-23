@@ -442,3 +442,128 @@ ggsave(
   dpi = 400,
   bg = "white"
 )
+
+
+####Cuadro comparativo#############################################
+mae_regular  <- min(gbm_mejorado_liviano$results$MAE)
+rmse_regular <- min(gbm_mejorado_liviano$results$RMSE)
+
+mae_spatial  <- min(gbm_mejorado_spatial$results$MAE)
+rmse_spatial <- min(gbm_mejorado_spatial$results$RMSE)
+
+comparacion_cv <- data.frame(
+  Validacion = c("Random CV","Spatial CV"),
+  MAE = c(mae_regular,mae_spatial),
+  RMSE = c(rmse_regular,rmse_spatial)
+)
+
+comparacion_cv <- comparacion_cv |>
+  mutate(
+    MAE = round(MAE,3),
+    RMSE = round(RMSE,3)
+  )
+
+comparacion_cv
+
+gap_pct <- round(
+  ((mae_spatial - mae_regular) / mae_regular) * 100,
+  1
+)
+
+gap_pct
+
+graf_mae <- ggplot(
+  comparacion_cv,
+  aes(
+    x = Validacion,
+    y = MAE,
+    fill = Validacion
+  )
+) +
+  
+  geom_col(width = 0.6) +
+  
+  geom_text(
+    aes(label = round(MAE,3)),
+    vjust = -0.5,
+    size = 5
+  ) +
+  
+  ylim(0,0.26) +
+  
+  labs(
+    title = "Regular CV vs Spatial CV",
+    subtitle = paste0(
+      "Spatial validation increases MAE by ",
+      gap_pct,
+      "%"
+    ),
+    x = "",
+    y = "MAE"
+  ) +
+  
+  theme_minimal(base_size = 14)
+
+graf_mae
+
+imp <- varImp(gbm_mejorado_spatial)$importance |>
+  rownames_to_column("variable") |>
+  arrange(desc(Overall)) |>
+  slice(1:15)
+
+imp
+
+graf_imp <- ggplot(
+  imp,
+  aes(
+    x = reorder(variable, Overall),
+    y = Overall
+  )
+) +
+  
+  geom_col() +
+  
+  coord_flip() +
+  
+  labs(
+    title = "Top 15 Most Important Variables",
+    subtitle = "GBM + Spatial CV",
+    x = "",
+    y = "Importance"
+  ) +
+  
+  theme_minimal(base_size = 13)
+
+graf_imp
+
+
+fold_map <- train_sf |>
+  mutate(
+    fold = NA
+  )
+
+for(i in 1:length(spatial_folds$splits)) {
+  
+  test_ids <- setdiff(
+    seq_len(nrow(train_sf)),
+    spatial_folds$splits[[i]]$in_id
+  )
+  
+  fold_map$fold[test_ids] <- paste0("Fold ", i)
+}
+
+####################################################
+# GRÁFICA
+####################################################
+
+ggplot(fold_map) +
+  
+  geom_sf(aes(color = fold), size = 1) +
+  
+  labs(
+    title = "Spatial Cross-Validation Folds",
+    subtitle = "Validation sets are geographically separated",
+    color = "Fold"
+  ) +
+  
+  theme_minimal(base_size = 14)
