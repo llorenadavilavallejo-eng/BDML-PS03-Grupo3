@@ -1,5 +1,5 @@
 ####################################
-# BASE GBM MEJORADA
+# BASE GBM MEJORADA CON CV SPATIAL
 ####################################
 
 train_model_gbm1 <- train_model_lm3 |>
