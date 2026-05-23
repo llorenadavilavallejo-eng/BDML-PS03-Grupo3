@@ -24,22 +24,31 @@ Para reproducir todos los resultados, una vez descargados y ubicados los datos, 
 -   `01_code/00_rundirectory.R`: Master script. Reproduce todos los códigos y resultados.
 -   `01_code/01_setup_packages.R`: Carga e instala los paquetes necesarios.
 -   `01_code/02_load_and_preprare_data.R`: Llama, transforma y realiza la limpieza necesaria a los datos.
--   `01_code/03_model_1_LPM_v1.R`: Estimación del modelo lineal
--   `01_code/04_model_2_LPM_v2.R`: Estimación del modelo lineal mejorado
--   `01_code/05_model_3_Logit_v1.R`: Estimación del modelo logit
--   `01_code/06_model_4_Logit_v2.R`: Estimación del modelo logit mejorado
--   `01_code/07_model_5_EN_v1.R`: Estimación del modelo elastic net
--   `01_code/08_model_6_EN_v2.R`: Estimación del modelo elastic net mejorado
--   `01_code/09_model_7_RF_v1.R`: Estimación del modelo random forest
--   `01_code/10_model_8_NB_v1.R`: Estimación del modelo naive bayes
--   `01_code/11_model_9_CART_v1.R`: Estimación del modelo de árbol o CART
--   `01_code/12_model_10_EN_v3.R`: Estimación del modelo elastic net con ROSE
--   `01_code/13_model_11_EN_v4.R`: Estimación del modelo elastic net con UPSUMPLING
--   `01_code/14_model_12_EN_v5.R`: Estimación del modelo elastic net con DOWNSAMPLIN
--   `01_code/15_model_13_EN_v6.R`: Estimación del modelo elastic net Tuning de Alpha y Lambda
--   `01_code/16_model_14_Logit_v3.R`: Estimación del modelo logit alterno
--   `01_code/17_model_15_RF_v2.R`: Estimación del modelo random forest alterno
--   `01_code/18_statistics_of_models.R`: Crea tablas y gráficas sobre los resultados y cálculos de los modelos.
+-   `01_code/03_model_1_LM_v1.R`: Estimación del modelo lineal
+-   `01_code/04_model_2_EN_v1.R`: Estimación del modelo elastic net.
+-   `01_code/05_model_3_CART_v1.R`: Estimación del modelo de árbol o CART.
+-   `01_code/06_model_4_RF_v1.R`: Estimación del modelo random forest.
+-   `01_code/07_model_5_RF_v2.R`: Estimación del modelo random forest alternativo.
+-   `01_code/08_model_6_GMB_v1.R`: Estimación del modelo gradient boosting.
+-   `01_code/09_model_7_SL_v1.R`: Estimación del modelo super learner.
+-   `01_code/10_model_8_RF_spatial_v3.R`: Estimación del modelo random forest con CV spatial.
+-   `01_code/11_model_9_EN_spatial_v2.R`: Estimación del modelo elastic net con CV spatial.
+-   `01_code/12_model_10_GBM_spatial_v2.R`: Estimación del modelo gradient boosting con CV spatial.
+-   `01_code/13_model_11_LM_v2.R`: Estimación del modelo lineal mejorado.
+-   `01_code/14_model_12_LM_v3.R`: Estimación del modelo lineal mejorado alternativo.
+-   `01_code/15_model_13_EN_v3.R`: Estimación del modelo elastic net mejorado.
+-   `01_code/16_model_14_EN_v4.R`: Estimación del modelo elastic net mejorado alternativo.
+-   `01_code/17_model_15_EN_v5.R`: Estimación del modelo elastic net mejorado alternativo.
+-   `01_code/18_model_16_CART_v2.R`: Estimación del modelo de árbol o CART mejorado.
+-   `01_code/19_model_17_RF_v4.R`: Estimación del modelo random forest alternativo.
+-   `01_code/20_model_18_CART_v3.R`: Estimación del modelo de árbol o CART mejorado alternativo.
+-   `01_code/21_model_19_RF_v5.R`: Estimación del modelo random forest alternativo.
+-   `01_code/22_model_20_NN_v1.R`: Estimación del modelo red neuronal.
+-   `01_code/23_model_21_SL_v2.R`: Estimación del modelo super learner alternativo.
+-   `01_code/24_model_22_EN_v5.R`: Estimación del modelo 
+-   `01_code/25_model_23_EN_v5.R`: Estimación del modelo 
+-   `01_code/26_model_24_EN_v5.R`: Estimación del modelo 
+-   `01_code/27_statistics_of_maps.R`: Crea tablas, gráficas y mapas sobre los resultados y los cálculos de los modelos.
 
 ## Salidas
 

@@ -25,49 +25,76 @@ source("01_code/01_setup_packages.R")
 source("01_code/02_load_and_prepare_data.R")
 
 # Paso 3: Estimación del modelo lineal.
-source("01_code/03_model_1_LPM_v1.R")
+source("01_code/03_model_1_LM_v1.R")
 
-# Paso 4: Estimación del modelo lineal mejorado.
-source("01_code/04_model_2_LPM_v2.R")
+# Paso 4: Estimación del modelo elastic net.
+source("01_code/04_model_2_EN_v1.R")
 
-# Paso 5: Estimación del modelo logit.
-source("01_code/05_model_3_Logit_v1.R")
+# Paso 5: Estimación del modelo de árbol o CART.
+source("01_code/05_model_3_CART_v1.R")
 
-# Paso 6: Estimación del modelo logit mejorado.
-source("01_code/06_model_4_Logit_v2.R")
+# Paso 6: Estimación del modelo random forest.
+source("01_code/06_model_4_RF_v1.R")
 
-# Paso 7: Estimación del modelo elastic net.
-source("01_code/07_model_5_EN_v1.R")
+# Paso 7: Estimación del modelo random forest alternativo.
+source("01_code/07_model_5_RF_v2.R")
 
-# Paso 8: Estimación del modelo elastic net mejorado.
-source("01_code/08_model_6_EN_v2.R")
+# Paso 8: Estimación del modelo gradient boosting.
+source("01_code/08_model_6_GMB_v1.R")
 
-# Paso 9: Estimación del modelo random forest.
-source("01_code/09_model_7_RF_v1.R")
+# Paso 9: Estimación del modelo super learner.
+source("01_code/09_model_7_SL_v1.R")
 
-# Paso 10: Estimación del modelo naive bayes.
-source("01_code/10_model_8_NB_v1.R")
+# Paso 10: Estimación del modelo random forest con CV spatial.
+source("01_code/10_model_8_RF_spatial_v3.R")
 
-# Paso 11: Estimación del modelo de árbol o CART.
-source("01_code/11_model_9_CART_v1.R")
+# Paso 11: Estimación del modelo elastic net con CV spatial.
+source("01_code/11_model_9_EN_spatial_v2.R")
 
-# Paso 12: Estimación del modelo elastic net con ROSE.
-source("01_code/12_model_10_EN_v3.R")
+# Paso 12: Estimación del modelo gradient boosting con CV spatial.
+source("01_code/12_model_10_GBM_spatial_v2.R")
 
-# Paso 13: Estimación del modelo elastic net con UPSUMPLING.
-source("01_code/13_model_11_EN_v4.R")
+# Paso 13: Estimación del modelo lineal mejorado.
+source("01_code/13_model_11_LM_v2.R")
 
-# Paso 14: Estimación del modelo elastic net con DOWNSAMPLIN.
-source("01_code/14_model_12_EN_v5.R")
+# Paso 14: Estimación del modelo lineal mejorado alternativo.
+source("01_code/14_model_12_LM_v3.R")
 
-# Paso 15: Estimación del modelo elastic net Tuning de Alpha y Lambda.
-source("01_code/15_model_13_EN_v6.R")
+# Paso 15: Estimación del modelo elastic net mejorado.
+source("01_code/15_model_13_EN_v3.R")
 
-# Paso 16: Estimación del modelo logit alterno.
-source("01_code/16_model_14_Logit_v3.R")
+# Paso 16: Estimación del modelo elastic net mejorado alternativo.
+source("01_code/16_model_14_EN_v4.R")
 
-# Paso 17: Estimación del modelo random forest alterno.
-source("01_code/17_model_15_RF_v2.R")
+# Paso 17: Estimación del modelo elastic net mejorado alternativo.
+source("01_code/17_model_15_EN_v5.R")
 
-# Paso 18: Crea tablas y gráficas sobre los resultados y cálculos de los modelos.
-source("01_code/18_statistics_of_models.R")
+# Paso 18: Estimación del modelo de árbol o CART mejorado.
+source("01_code/18_model_16_CART_v2.R")
+
+# Paso 19: Estimación del modelo random forest alternativo.
+source("01_code/19_model_17_RF_v4.R")
+
+# Paso 20: Estimación del modelo de árbol o CART mejorado alternativo.
+source("01_code/20_model_18_CART_v3.R")
+
+# Paso 21: Estimación del modelo random forest alternativo.
+source("01_code/21_model_19_RF_v5.R")
+
+# Paso 22: Estimación del modelo red neuronal.
+source("01_code/22_model_20_NN_v1.R")
+
+# Paso 23: Estimación del modelo super learner alternativo.
+source("01_code/23_model_21_SL_v2.R")
+
+# Paso 24: Estimación del modelo 
+source("01_code/24_model_22_EN_v5.R")
+
+# Paso 25: Estimación del modelo 
+source("01_code/25_model_23_EN_v5.R")
+
+# Paso 26: Estimación del modelo 
+source("01_code/26_model_24_EN_v5.R")
+
+# Paso 27: Crea tablas, gráficas y mapas sobre los resultados y los cálculos de los modelos.
+source("01_code/27_statistics_and_maps.R")
