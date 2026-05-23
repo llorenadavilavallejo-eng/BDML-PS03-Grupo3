@@ -567,3 +567,89 @@ ggplot(fold_map) +
   ) +
   
   theme_minimal(base_size = 14)
+
+######################################################
+# TABLA DESCRIPTIVA
+
+
+tabla_desc_gbm <- train_model_gbm1 |>
+  select(
+    log_price,
+    log_surface_total,
+    bedrooms,
+    bathrooms,
+    lat,
+    lon,
+    log_dist_parque,
+    log_dist_bus,
+    log_dist_commerce,
+    log_rest_250m,
+    amenity_density,
+    surface_bath,
+    surface_bed
+  ) |>
+  summarise(
+    across(
+      everything(),
+      list(
+        Media = ~ mean(.x, na.rm = TRUE),
+        Desv_Est = ~ sd(.x, na.rm = TRUE),
+        Minimo = ~ min(.x, na.rm = TRUE),
+        Maximo = ~ max(.x, na.rm = TRUE)
+      )
+    )
+  ) |>
+  pivot_longer(
+    cols = everything(),
+    names_to = c("Variable", ".value"),
+    names_pattern = "(.+)_(Media|Desv_Est|Minimo|Maximo)"
+  ) |>
+  mutate(
+    across(
+      c(Media, Desv_Est, Minimo, Maximo),
+      ~ round(.x, 4)
+    )
+  )
+
+
+# IMAGEN
+
+
+tabla_desc_gbm_gt <- tabla_desc_gbm |>
+  gt() |>
+  tab_header(
+    title = "Estadísticas Descriptivas - Modelo GBM con Validación Espacial"
+  ) |>
+  cols_label(
+    Variable = "Variable",
+    Media = "Media",
+    Desv_Est = "Desv. Est.",
+    Minimo = "Mínimo",
+    Maximo = "Máximo"
+  ) |>
+  fmt_number(
+    columns = c(Media, Desv_Est, Minimo, Maximo),
+    decimals = 4
+  )
+
+# 
+# EXPORTAR IMAGEN PNG
+#
+
+gtsave(
+  tabla_desc_gbm_gt,
+  "Tabla_Estadisticas_Descriptivas_GBM_SpatialCV.png"
+)
+
+#######
+plot(
+  pred_train,
+  train_model_gbm1$log_price,
+  pch = 16,
+  cex = 0.5,
+  xlab = "Predicción",
+  ylab = "Valor real",
+  main = "Predicción vs Valor real"
+)
+
+abline(0,1,col="red",lwd=2)
