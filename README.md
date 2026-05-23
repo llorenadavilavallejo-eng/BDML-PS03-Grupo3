@@ -29,7 +29,7 @@ Para reproducir todos los resultados, una vez descargados y ubicados los datos, 
 -   `01_code/05_model_3_CART_v1.R`: Estimación del modelo de árbol o CART.
 -   `01_code/06_model_4_RF_v1.R`: Estimación del modelo random forest.
 -   `01_code/07_model_5_RF_v2.R`: Estimación del modelo random forest alternativo.
--   `01_code/08_model_6_GMB_v1.R`: Estimación del modelo gradient boosting.
+-   `01_code/08_model_6_GBM_v1.R`: Estimación del modelo gradient boosting.
 -   `01_code/09_model_7_SL_v1.R`: Estimación del modelo super learner.
 -   `01_code/10_model_8_RF_spatial_v3.R`: Estimación del modelo random forest con CV spatial.
 -   `01_code/11_model_9_EN_spatial_v2.R`: Estimación del modelo elastic net con CV spatial.
@@ -45,9 +45,9 @@ Para reproducir todos los resultados, una vez descargados y ubicados los datos, 
 -   `01_code/21_model_19_RF_v5.R`: Estimación del modelo random forest alternativo.
 -   `01_code/22_model_20_NN_v1.R`: Estimación del modelo red neuronal.
 -   `01_code/23_model_21_SL_v2.R`: Estimación del modelo super learner alternativo.
--   `01_code/24_model_22_EN_v5.R`: Estimación del modelo 
--   `01_code/25_model_23_EN_v5.R`: Estimación del modelo 
--   `01_code/26_model_24_EN_v5.R`: Estimación del modelo 
+-   `01_code/24_model_22_GBM_v3.R`: Estimación del modelo gradient boosting.
+-   `01_code/25_model_23_GBM_v4.R`: Estimación del modelo gradient boosting.
+-   `01_code/26_model_24_GBM_spatial_v5.R`: Estimación del modelo gradient boosting con CV spatial.
 -   `01_code/27_statistics_of_maps.R`: Crea tablas, gráficas y mapas sobre los resultados y los cálculos de los modelos.
 
 ## Salidas

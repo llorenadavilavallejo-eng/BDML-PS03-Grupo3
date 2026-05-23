@@ -1,7 +1,6 @@
 ####################################
-# MODELO 4: RANDOM FOREST MEJORADO
+# MODELO 4: RANDOM FOREST FAST
 ####################################
-
 
 if (!require(randomForest)) {
   install.packages("randomForest")
@@ -9,175 +8,123 @@ if (!require(randomForest)) {
 }
 
 # =========================
-# BASE RF MEJORADA
+# BASE RF FAST
 # =========================
 
-train_model_rf1 <- train_model_lm3 |>
-  mutate(
-    lat_lon = lat * lon,
-    lat2 = lat^2,
-    lon2 = lon^2,
-    
-    amenity_density =
-      log_rest_250m +
-      log_parks_500m +
-      log_bus_300m +
-      log_commerce_500m,
-    
-    dist_services =
-      log_dist_bus +
-      log_dist_commerce +
-      log_dist_school,
-    
-    dist_security_health =
-      log_dist_health +
-      log_dist_police,
-    
-    bath_bed = bathrooms * bedrooms,
-    surface_bath = log_surface_total * bathrooms,
-    surface_bed  = log_surface_total * bedrooms
-  )
-
-test_model_rf1 <- test_model_lm3 |>
-  mutate(
-    lat_lon = lat * lon,
-    lat2 = lat^2,
-    lon2 = lon^2,
-    
-    amenity_density =
-      log_rest_250m +
-      log_parks_500m +
-      log_bus_300m +
-      log_commerce_500m,
-    
-    dist_services =
-      log_dist_bus +
-      log_dist_commerce +
-      log_dist_school,
-    
-    dist_security_health =
-      log_dist_health +
-      log_dist_police,
-    
-    bath_bed = bathrooms * bedrooms,
-    surface_bath = log_surface_total * bathrooms,
-    surface_bed  = log_surface_total * bedrooms
-  )
+train_model_rf_fast <- train_model_lm3
+test_model_rf_fast  <- test_model_lm3
 
 # =========================
-# GRID RF
+# CONTROL MÁS LIVIANO
 # =========================
 
-grid_rf1 <- expand.grid(
-  mtry = c(4, 6, 8, 10, 12, 15)
-)
-
-ctrl_rf1 <- trainControl(
+ctrl_rf_fast <- trainControl(
   method = "cv",
-  number = 5,
+  number = 3,
+  verboseIter = TRUE,
   savePredictions = "final"
 )
 
 # =========================
-# MODELO RANDOM FOREST
+# GRID PEQUEÑO
+# =========================
+
+grid_rf_fast <- expand.grid(
+  mtry = c(6, 10)
+)
+
+# =========================
+# MODELO RANDOM FOREST FAST
 # =========================
 
 set.seed(2026)
 
-rf_mejorado <- train(
+rf_fast <- train(
   log_price ~ .,
-  data       = train_model_rf1,
+  data       = train_model_rf_fast,
   method     = "rf",
   metric     = "MAE",
-  trControl  = ctrl_rf1,
-  tuneGrid   = grid_rf1,
-  ntree      = 200,
-  importance = TRUE
+  trControl  = ctrl_rf_fast,
+  tuneGrid   = grid_rf_fast,
+  ntree      = 40,
+  importance = FALSE
 )
 
-rf_mejorado
-rf_mejorado$bestTune
-getTrainPerf(rf_mejorado)
+rf_fast
+rf_fast$bestTune
+getTrainPerf(rf_fast)
 
 # =========================
-# TABLA DE RESULTADOS
+# TABLA DE PUNTAJES
 # =========================
 
-tabla_rf1 <- rf_mejorado$results |>
+tabla_rf_fast <- rf_fast$results |>
   arrange(MAE) |>
   mutate(rank = row_number()) |>
   select(rank, mtry, MAE, RMSE, Rsquared)
 
-View(tabla_rf1)
+View(tabla_rf_fast)
 
 write.csv(
-  tabla_rf1,
-  "Tabla_Model4_RF_mejorado.csv",
+  tabla_rf_fast,
+  "Tabla_Model4_RF_fast.csv",
   row.names = FALSE
 )
-
-# =========================
-# IMPORTANCIA VARIABLES
-# =========================
-
-imp_rf1 <- varImp(rf_mejorado)
-
-imp_rf1
 
 # =========================
 # PREDICCIONES
 # =========================
 
-pred_log_rf1 <- predict(
-  rf_mejorado,
-  newdata = test_model_rf1 |> select(-property_id)
+pred_log_rf_fast <- predict(
+  rf_fast,
+  newdata = test_model_rf_fast |> select(-property_id)
 )
 
 # =========================
-# RECORTE PRUDENTE
+# RECORTE DE PREDICCIONES
 # =========================
 
-log_low_rf1 <- quantile(
-  train_model_rf1$log_price,
+log_low_rf_fast <- quantile(
+  train_model_rf_fast$log_price,
   0.01,
   na.rm = TRUE
 )
 
-log_high_rf1 <- quantile(
-  train_model_rf1$log_price,
+log_high_rf_fast <- quantile(
+  train_model_rf_fast$log_price,
   0.99,
   na.rm = TRUE
 )
 
-pred_log_rf1_c <- pmin(
-  pmax(pred_log_rf1, log_low_rf1),
-  log_high_rf1
+pred_log_rf_fast_c <- pmin(
+  pmax(pred_log_rf_fast, log_low_rf_fast),
+  log_high_rf_fast
 )
 
 # =========================
-# SUBMISSION
+# SUBMISSION KAGGLE
 # =========================
 
-submission_rf_mejorado <- data.frame(
-  property_id = test_model_rf1$property_id,
-  price       = exp(pred_log_rf1_c)
+submission_rf_fast <- data.frame(
+  property_id = test_model_rf_fast$property_id,
+  price       = exp(pred_log_rf_fast_c)
 )
 
-View(submission_rf_mejorado)
+View(submission_rf_fast)
 
-mtry_str_rf1 <- as.character(
-  rf_mejorado$bestTune$mtry
+mtry_str_rf_fast <- as.character(
+  rf_fast$bestTune$mtry
 )
 
-file_rf1 <- paste0(
-  "Model4_RF_mejorado_mtry_",
-  mtry_str_rf1,
+file_rf_fast <- paste0(
+  "Model4_RF_fast_mtry_",
+  mtry_str_rf_fast,
   ".csv"
 )
 
 write.csv(
-  submission_rf_mejorado,
-  here("03_output", "submissions", "file_rf1"),
+  submission_rf_fast,
+  here("03_output", "submissions", "file_rf_fast"),
   row.names = FALSE
 )
 

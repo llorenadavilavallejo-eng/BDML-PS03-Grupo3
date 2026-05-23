@@ -40,7 +40,7 @@ source("01_code/06_model_4_RF_v1.R")
 source("01_code/07_model_5_RF_v2.R")
 
 # Paso 8: Estimación del modelo gradient boosting.
-source("01_code/08_model_6_GMB_v1.R")
+source("01_code/08_model_6_GBM_v1.R")
 
 # Paso 9: Estimación del modelo super learner.
 source("01_code/09_model_7_SL_v1.R")
@@ -87,14 +87,14 @@ source("01_code/22_model_20_NN_v1.R")
 # Paso 23: Estimación del modelo super learner alternativo.
 source("01_code/23_model_21_SL_v2.R")
 
-# Paso 24: Estimación del modelo 
-source("01_code/24_model_22_EN_v5.R")
+# Paso 24: Estimación del modelo gradient boosting 
+source("01_code/24_model_22_GBM_v3.R")
 
-# Paso 25: Estimación del modelo 
-source("01_code/25_model_23_EN_v5.R")
+# Paso 25: Estimación del modelo gradient boosting 
+source("01_code/25_model_23_GBM_v4.R")
 
-# Paso 26: Estimación del modelo 
-source("01_code/26_model_24_EN_v5.R")
+# Paso 26: Estimación del modelo gradient boosting con CV spatial
+source("01_code/26_model_24_GBM_spatial_v5.R")
 
 # Paso 27: Crea tablas, gráficas y mapas sobre los resultados y los cálculos de los modelos.
 source("01_code/27_statistics_and_maps.R")
