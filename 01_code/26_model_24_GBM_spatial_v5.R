@@ -111,10 +111,10 @@ ctrl_gbm1 <- trainControl(
 ####################################
 
 grid_gbm1 <- expand.grid(
-  n.trees = c(500, 800, 1100),
-  interaction.depth = c(3, 5, 7),
-  shrinkage = c(0.01, 0.03),
-  n.minobsinnode = c(10, 20)
+  n.trees = c(300, 500, 700),
+  interaction.depth = c(3, 5),
+  shrinkage = c(0.03, 0.05),
+  n.minobsinnode = c(10)
 )
 
 ####################################
