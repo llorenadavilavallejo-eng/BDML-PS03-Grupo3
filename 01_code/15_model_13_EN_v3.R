@@ -115,7 +115,7 @@ name_EN2 <- paste0(
 
 write.csv(
   submission_EN2_mejorado,
-  here("03_output", "submissions", "name_EN2"),
+  here("03_output", "submissions", name_EN2),
   row.names = FALSE
 )
 

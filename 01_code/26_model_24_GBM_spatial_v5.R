@@ -157,8 +157,6 @@ tabla_gbm1 <- gbm_mejorado_spatial$results |>
     Rsquared
   )
 
-View(tabla_gbm1)
-
 ####################################
 # IMPORTANCIA VARIABLES
 ####################################
@@ -217,7 +215,7 @@ file_gbm1 <- paste0(
 
 write.csv(
   submission_gbm1,
-  file_gbm1,
+  here("03_output", "submissions", file_gbm1),
   row.names = FALSE
 )
 

@@ -124,7 +124,7 @@ file_rf_fast <- paste0(
 
 write.csv(
   submission_rf_fast,
-  here("03_output", "submissions", "file_rf_fast"),
+  here("03_output", "submissions", file_rf_fast),
   row.names = FALSE
 )
 

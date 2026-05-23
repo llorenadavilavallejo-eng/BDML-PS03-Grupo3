@@ -166,7 +166,7 @@ file_cart3 <- paste0(
 
 write.csv(
   submission_cart3,
-  here("03_output", "submissions", "file_cart3"),
+  here("03_output", "submissions", file_cart3),
   row.names = FALSE
 )
 

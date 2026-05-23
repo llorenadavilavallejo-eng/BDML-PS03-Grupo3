@@ -176,7 +176,7 @@ file_gbm2 <- paste0(
 
 write.csv(
   submission_gbm2,
-  here("03_output", "submissions", "file_gbm2"),
+  here("03_output", "submissions", file_gbm2),
   row.names = FALSE
 )
 
